@@ -2,15 +2,38 @@ package me.yoonho.inflearnthejavatest;
 
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+// 메소드 명의 언더 바를 공백으로 바꿔줌
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class StudyTest {
 
     @Test
+    // 메소드 이름이 아닌 테스트 이름을 직접 선
+    @DisplayName("스터디 만들기")
     void create() {
-        Study study = new Study();
-        assertNotNull(study);
-        System.out.println("create");
+        Study study = new Study(10);
+
+        // 예외 발생 테스트
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new Study(-10));
+        assertEquals(exception.getMessage(), "스터디 정원은 0보다 커야 한다.");
+
+        // 테스트를 순차적이 아닌 한꺼번에 실행해야 할 경우 사용할 수 있다.
+        assertAll(
+                () -> assertNotNull(study),
+                () -> assertEquals(StudyStatus.DRAFT, study.getStatus(), "스터디를 처음 만들면 상태 값이 DRAFT여야 한다."),
+                () -> assertTrue(study.getLimit() > 0, "스터디 최대 참석 가능 인원은 0보다 커야 한다.")
+        );
+
+        // 처리 시간을 테스트. 10초 안에 스터디 생성이 끝나야 한다.
+        assertTimeout(Duration.ofSeconds(10), () -> new Study(10));
+        // 타임 아웃이 발생하면 그 이후에 코드는 실행하지 않고 바로 종료.
+        assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
+            new Study(10);
+            Thread.sleep(3000);
+        });
     }
 
     @Test
