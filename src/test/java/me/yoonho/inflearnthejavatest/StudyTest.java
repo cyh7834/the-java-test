@@ -56,6 +56,19 @@ class StudyTest {
     }
 
     @Test
+    // intellij junit 테스트 설정이나 maven surefire 설정을 통해 특정 태그의 테스트만 실행할 수 있다.
+    @Tag("fast")
+    void fastTest() {
+
+    }
+
+    @Test
+    @Tag("slow")
+    void slowTest() {
+
+    }
+
+    @Test
     void create1() {
         System.out.println("create1");
     }
