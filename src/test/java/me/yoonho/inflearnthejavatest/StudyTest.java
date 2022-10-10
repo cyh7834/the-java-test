@@ -1,10 +1,16 @@
 package me.yoonho.inflearnthejavatest;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.JRE;
+import org.junit.jupiter.api.condition.OS;
 
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 // 메소드 명의 언더 바를 공백으로 바꿔줌
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -33,6 +39,19 @@ class StudyTest {
         assertTimeoutPreemptively(Duration.ofSeconds(1), () -> {
             new Study(10);
             Thread.sleep(3000);
+        });
+    }
+
+    @Test
+    @DisplayName("조건에 따라 테스트 실행하기")
+    @EnabledOnOs(OS.MAC)
+    @EnabledOnJre(JRE.JAVA_11)
+    void assumeTrueTest() {
+        String testEnv = "LOCAL";
+
+        assumeTrue("LOCAL".equalsIgnoreCase(testEnv));
+        assumingThat("DEV".equalsIgnoreCase(testEnv), () -> {
+
         });
     }
 
