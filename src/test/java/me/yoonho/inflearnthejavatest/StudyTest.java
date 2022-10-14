@@ -68,6 +68,12 @@ class StudyTest {
 
     }
 
+    @FastTest
+    @DisplayName("커스텀 애노테이션 테스트")
+    void customAnnotation() {
+
+    }
+
     @Test
     void create1() {
         System.out.println("create1");
