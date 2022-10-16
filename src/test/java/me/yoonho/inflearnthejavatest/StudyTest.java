@@ -5,6 +5,8 @@ import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
 
@@ -72,6 +74,24 @@ class StudyTest {
     @DisplayName("커스텀 애노테이션 테스트")
     void customAnnotation() {
 
+    }
+
+    @RepeatedTest(value = 10, name = "{displayName}, {currentRepetition}")
+    void repeatTest(RepetitionInfo repetitionInfo) {
+        int currentRepetition = repetitionInfo.getCurrentRepetition();
+        int totalRepetitions = repetitionInfo.getTotalRepetitions();
+
+        System.out.println("currentRepetition = " + currentRepetition);
+        System.out.println("totalRepetitions = " + totalRepetitions);
+
+    }
+
+    // 정의된 파라미터로 반복하여 테스트를 진행한다.
+    @DisplayName("파라미터 테스트")
+    @ParameterizedTest(name = "{index} {displayName} {0}")
+    @ValueSource(strings = {"a", "b", "c", "d"})
+    void parameterizedTest(String alpha) {
+        System.out.println(alpha);
     }
 
     @Test
