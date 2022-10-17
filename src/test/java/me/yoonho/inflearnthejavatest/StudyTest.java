@@ -5,7 +5,18 @@ import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.Duration;
@@ -92,6 +103,40 @@ class StudyTest {
     @ValueSource(strings = {"a", "b", "c", "d"})
     void parameterizedTest(String alpha) {
         System.out.println(alpha);
+    }
+
+    // 정의된 파라미터로 반복하여 테스트를 진행한다.
+    @DisplayName("파라미터 테스트2")
+    @ParameterizedTest(name = "{index} {displayName} {0}")
+    //@ValueSource(ints = {1, 2, 3})
+    @CsvSource({"10, '자바 스터디'", "20, 스프링"})
+    //@EmptySource // 비어있는 문자열을 추가
+    //@NullSource // NULL을 추가
+    void parameterizedTest2(@ConvertWith(StudyConverter.class) Study study) {
+        System.out.println(study.getLimit());
+    }
+
+    static class StudyConverter extends SimpleArgumentConverter {
+        @Override
+        protected Object convert(Object o, Class<?> aClass) throws ArgumentConversionException {
+            assertEquals(Study.class, aClass, "Can only convert to Study");
+            return new Study(Integer.parseInt(o.toString()));
+        }
+    }
+
+    @ParameterizedTest
+    @DisplayName("파라미터 테스트3")
+    @CsvSource({"10, '자바 스터디'", "20, 스프링"})
+    void parameterizedTest3(@AggregateWith(StudyAggregator.class) Study study) {
+        System.out.println(study.toString());
+    }
+
+    static class StudyAggregator implements ArgumentsAggregator {
+
+        @Override
+        public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext) throws ArgumentsAggregationException {
+            return new Study(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
+        }
     }
 
     @Test
