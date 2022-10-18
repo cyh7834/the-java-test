@@ -27,8 +27,10 @@ import static org.junit.jupiter.api.Assumptions.assumingThat;
 
 // 메소드 명의 언더 바를 공백으로 바꿔줌
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+//@TestInstance(value = TestInstance.Lifecycle.PER_CLASS) // 테스트 인스턴스를 하나만 만들어서 상태 값을 공유.
 class StudyTest {
 
+    int value = 1; // 테스트 인스턴스마다 StudyTest 클래스가 새로 만들어지기 때문에 어떤 메소드던지 값은 1이다.
     @Test
     // 메소드 이름이 아닌 테스트 이름을 직접 선
     @DisplayName("스터디 만들기")
