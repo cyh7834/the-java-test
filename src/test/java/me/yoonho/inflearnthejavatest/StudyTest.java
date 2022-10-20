@@ -5,7 +5,9 @@ import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -25,12 +27,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.Assumptions.assumingThat;
 
+// Extension을 선언적으로 등록하여 전체 메소드에 적용.
+@ExtendWith(FindSlowTestExtension.class)
 // 메소드 명의 언더 바를 공백으로 바꿔줌
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 //@TestInstance(value = TestInstance.Lifecycle.PER_CLASS) // 테스트 인스턴스를 하나만 만들어서 상태 값을 공유.
 class StudyTest {
 
+    // 필드에 extension을 선언. 생성자를 커스텀하게 추가하여 사용하기 위함.
+    @RegisterExtension
+    static FindSlowTestExtension findSlowTestExtension = new FindSlowTestExtension();
+
     int value = 1; // 테스트 인스턴스마다 StudyTest 클래스가 새로 만들어지기 때문에 어떤 메소드던지 값은 1이다.
+
     @Test
     // 메소드 이름이 아닌 테스트 이름을 직접 선
     @DisplayName("스터디 만들기")
