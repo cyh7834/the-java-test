@@ -1,4 +1,4 @@
-package me.yoonho.inflearnthejavatest;
+package me.yoonho.inflearnthejavatest.study;
 
 public enum StudyStatus {
     DRAFT, STARTED, ENDED

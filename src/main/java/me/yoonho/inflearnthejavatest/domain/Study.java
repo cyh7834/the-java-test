@@ -1,4 +1,6 @@
-package me.yoonho.inflearnthejavatest;
+package me.yoonho.inflearnthejavatest.domain;
+
+import me.yoonho.inflearnthejavatest.study.StudyStatus;
 
 public class Study {
     private StudyStatus studyStatus = StudyStatus.DRAFT;
@@ -6,6 +8,8 @@ public class Study {
     private int limit;
 
     private String name;
+
+    private Member owner;
 
     public Study(int limit, String name) {
         this.limit = limit;
@@ -29,6 +33,10 @@ public class Study {
 
     public String getName() {
         return this.name;
+    }
+
+    public void setOwner(Member owner) {
+        this.owner = owner;
     }
 
     @Override
