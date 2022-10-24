@@ -62,5 +62,9 @@ public class StudyServiceTest {
         //Study newStudy = studyService.createNewStudy(1L, study);
         //assertNotNull(newStudy);
 
+        // mock 연습문제
+        when(memberService.findById(1L)).thenReturn(Optional.of(member));
+        when(studyRepository.save(study)).thenReturn(study);
+
     }
 }
