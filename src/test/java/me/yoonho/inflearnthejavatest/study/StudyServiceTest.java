@@ -6,6 +6,7 @@ import me.yoonho.inflearnthejavatest.member.MemberService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -14,8 +15,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Mock 객체는 인터페이스만 존재하고 구현체가 없는 클래스들을 구현체 없이 테스트를 위해 의존성을 주입할 수 있다.
@@ -66,5 +66,18 @@ public class StudyServiceTest {
         when(memberService.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.save(study)).thenReturn(study);
 
+        // notify 메소드가 한번 호출되어야 한다. mock 객체가 어떻게 사용되는지 확인하는 방법
+        verify(memberService, times(1)).notify(study);
+
+        // validate 호출되면 안된다.
+        verify(memberService, never()).validate(any());
+
+        // study의 notify 후에 member의 notify가 실행돼야한다.
+        InOrder inOrder = inOrder(memberService);
+        inOrder.verify(memberService).notify(study);
+        inOrder.verify(memberService).notify(member);
+
+        // memberService에서 작업이 더이상 일어나면 안된디.
+        //verifyNoMoreInteractions(memberService);
     }
 }
