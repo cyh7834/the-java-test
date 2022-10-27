@@ -93,5 +93,19 @@ public class StudyServiceTest {
         // then
         then(memberService).should(times(1)).notify(study);
         then(memberService).shouldHaveNoMoreInteractions();
+
+        // Mockito 연습문제
+        // given
+        StudyService studyService1 = new StudyService(memberService, studyRepository);
+        Study study1 = new Study(10, "더 자바, 테스트");
+        given(studyRepository.save(study1)).willReturn(study1);
+
+        // when
+        studyService1.openStudy(study1);
+
+        // then
+        assertEquals(StudyStatus.OPENED, study1.getStatus());
+        assertNotNull(study1.getOpenedDateTime());
+        then(memberService).should().notify(study1);
     }
 }

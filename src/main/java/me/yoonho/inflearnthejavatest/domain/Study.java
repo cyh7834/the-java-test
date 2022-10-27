@@ -2,6 +2,8 @@ package me.yoonho.inflearnthejavatest.domain;
 
 import me.yoonho.inflearnthejavatest.study.StudyStatus;
 
+import java.time.LocalDateTime;
+
 public class Study {
     private StudyStatus studyStatus = StudyStatus.DRAFT;
 
@@ -10,6 +12,8 @@ public class Study {
     private String name;
 
     private Member owner;
+
+    private LocalDateTime openedDateTime;
 
     public Study(int limit, String name) {
         this.limit = limit;
@@ -21,6 +25,15 @@ public class Study {
             throw new IllegalArgumentException("스터디 정원은 0보다 커야 한다.");
         }
         this.limit = limit;
+    }
+
+    public void open() {
+        this.openedDateTime = LocalDateTime.now();
+        this.studyStatus = StudyStatus.OPENED;
+    }
+
+    public LocalDateTime getOpenedDateTime() {
+        return openedDateTime;
     }
 
     public StudyStatus getStatus() {
